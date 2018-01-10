@@ -1,4 +1,4 @@
-CREATE TABLE sso_db.user (
+CREATE TABLE simple_sso_db.user (
    id int UNSIGNED AUTO_INCREMENT NOT NULL,
    username varchar(20)  NOT NULL,
    password varchar(50)  NOT NULL,
