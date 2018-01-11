@@ -4,7 +4,7 @@
 header('Content-Type: text/html; charset=UTF-8');
 
 // secret key
-$secret_key = "mysecret_key";
+$secret_key = "mysecretkey";
 
 // setting expire_time
 $expire = 500;
