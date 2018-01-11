@@ -1,7 +1,9 @@
 <?php
+    //secret_key
+    $secret_key = "mysecretkey";
 
     // Check event regis, enough param or not
-    if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_handle']) && isset($_POST['secret_key']) && $_POST['secret_key'] == "mysecretkey"){
+    if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_handle']) && isset($_POST['secret_key']) && $_POST['secret_key'] == $secret_key){
         
         //connect to database
         include('connect.php');
