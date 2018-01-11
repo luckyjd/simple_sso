@@ -30,7 +30,9 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     $result = mysqli_query($conn,$sql_check_username);
     if (mysqli_num_rows($result) == 0) {
         $error .= "This user is not exists.";
+        mysqli_close($conn);
         redirect($url, $username, $token, $error,$expire);
+
     }
     // fetch record
     $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
@@ -39,13 +41,26 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     if ($password == $row['password']) {
         // correct pass
         $token = bin2hex(openssl_random_pseudo_bytes(64));
-        $error = "pass";
-        redirect($url, $username, $token, $error,$expire);
+        $sql_update_token = "UPDATE user SET token='$token' WHERE username='$username'";
+        if (mysqli_query($conn, $sql_update_token)) {
+            //echo "Record updated successfully";
+            $error = "pass";
+            //close connection
+            mysqli_close($conn);
+            //redirect 
+            redirect($url, $username, $token, $error,$expire);
+        } else {
+            echo "Error updating record: " . mysqli_error($conn);
+        }
+        
+        
     } else {
         // uncorrect pass
         $error .= "Not correct password. Try again";
         redirect($url, $username, $token, $error, $expire);
     }
+    // close connection
+    mysqli_close($conn);
 } else {
     // if not enough param, kill process
     die("SOME THING WRONG HEREEEEEEE");

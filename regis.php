@@ -20,6 +20,8 @@
         $sql_check_username = "SELECT username FROM user WHERE username='$username'";
         if (mysqli_num_rows(mysqli_query($conn, $sql_check_username)) > 0) {
             $error .= "This username is used. Try other.";
+            // close connection
+            mysqli_close($conn);
             redirect($_POST['url_handle'], $error);
         } else {
             // insert into database 
@@ -27,9 +29,15 @@
             // excute query
             if (mysqli_query($conn, $sql)) {
                 $error = 'pass';
+                // close connection
+                mysqli_close($conn);
+                // redirect
                 redirect($_POST['url_handle'], $error);
             } else {
                 $error .= "Error: " . mysqli_error($conn);
+                // close connection
+                mysqli_close($conn);
+                //redirect
                 redirect($_POST['url_handle'], $error);
             }
         }
