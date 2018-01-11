@@ -31,7 +31,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     if (mysqli_num_rows($result) == 0) {
         $error .= "This user is not exists.";
         mysqli_close($conn);
-        redirect($url, $username, $token, $error,$expire);
+        redirect($url, $username, $token, $error, $expire, $secret_key);
 
     }
     // fetch record
@@ -48,7 +48,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
             //close connection
             mysqli_close($conn);
             //redirect 
-            redirect($url, $username, $token, $error,$expire);
+            redirect($url, $username, $token, $error,$expire, $secret_key);
         } else {
             echo "Error updating record: " . mysqli_error($conn);
         }
@@ -57,7 +57,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     } else {
         // uncorrect pass
         $error .= "Not correct password. Try again";
-        redirect($url, $username, $token, $error, $expire);
+        redirect($url, $username, $token, $error, $expire,$secret_key);
     }
     // close connection
     mysqli_close($conn);
@@ -66,7 +66,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     die("SOME THING WRONG HEREEEEEEE");
 }
 
-function redirect($url, $username, $token, $error,$expire) {
+function redirect($url, $username, $token, $error,$expire, $secret_key) {
     $html = "<html><body><form id='form' action='$url' method='post'>";
     $html .= "<input type='hidden' name='username' value='$username'>";
     $html .= "<input type='hidden' name='token' value='$token'>";
