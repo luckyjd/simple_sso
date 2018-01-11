@@ -2,60 +2,81 @@
 
 //Khai báo utf-8 để hiển thị được tiếng việt
 header('Content-Type: text/html; charset=UTF-8');
- 
-//Xử lý đăng nhập
-if (isset($_POST['login'])) 
-{   
-    //set url to redirect ( fix only that time )
-    $url = 'http://nhattx.learnphp.tinhvan.com/login_form_learnphp.php';
-    //Kết nối tới database
+
+// secret key
+$secret_key = "mysecretkey";
+
+// setting expire_time
+$expire = 500;
+$token = "";
+
+// Check event regis, enough param or not
+if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_handle']) && isset($_POST['secret_key']) && $_POST['secret_key'] == $secret_key){
+        
+    //connect to database
     include('connect.php');
-     
-    //Lấy dữ liệu nhập vào
-    $username = addslashes($_POST['txtUsername']);
-    $password = addslashes($_POST['txtPassword']);
+
+    //collect data
+    $username = addslashes($_POST['username']);
+    $password = addslashes($_POST['password']);
     $error = "";
-    //Kiểm tra đã nhập đủ tên đăng nhập với mật khẩu chưa
-    if (!$username || !$password) {
-        $error .= "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.";
-        redirect($url, $username, $error);
-    }
-     
-    // mã hóa pasword
+    $url = $_POST['url_handle'];
+
+    //encript
     $password = md5($password);
-     
-    //Kiểm tra tên đăng nhập có tồn tại không
+
+    //check username
     $sql_check_username = "SELECT username, password FROM user WHERE username='$username'";
     $result = mysqli_query($conn,$sql_check_username);
     if (mysqli_num_rows($result) == 0) {
-        $error .= "Tên đăng nhập này không tồn tại. Vui lòng kiểm tra lại.";
-        redirect($url, $username, $error);
-    }
-    
-    
-    //Lấy mật khẩu trong database ra
-    $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-    
-    //So sánh 2 mật khẩu có trùng khớp hay không
-    if ($password != $row['password']) {
-        $error .= "Mật khẩu không đúng. Vui lòng nhập lại.";
-        redirect($url, $username, $error);
-    }
-    function redirect($url, $username, $error) {
-        $html = "<html><body><form id='form' action='$url' method='post'>";
-        $html .= "<input type='hidden' name='username' value='$username'>";
-        $html .= "<input type='hidden' name='error' value='$error'>";
+        $error .= "This user is not exists.";
+        mysqli_close($conn);
+        redirect($url, $username, $token, $error, $expire, $secret_key);
 
-        $html .= "</form>";
-        $html .= "<script>document.getElementById('form').submit();</script>";
-        $html .= "</body></html>";
-        print($html);
     }
-    if ($error == ""){
-        $url = 'http://nhattx.learnphp.tinhvan.com/home_learnphp.php';
-        $error = 'pass';
-        redirect($url, $username, $error);
+    // fetch record
+    $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+
+    //compare password
+    if ($password == $row['password']) {
+        // correct pass
+        $token = bin2hex(openssl_random_pseudo_bytes(64));
+        $sql_update_token = "UPDATE user SET token='$token' WHERE username='$username'";
+        if (mysqli_query($conn, $sql_update_token)) {
+            //echo "Record updated successfully";
+            $error = "pass";
+            //close connection
+            mysqli_close($conn);
+            //redirect 
+            redirect($url, $username, $token, $error,$expire, $secret_key);
+        } else {
+            echo "Error updating record: " . mysqli_error($conn);
+        }
+        
+        
+    } else {
+        // uncorrect pass
+        $error .= "Not correct password. Try again";
+        redirect($url, $username, $token, $error, $expire,$secret_key);
     }
-    
+    // close connection
+    mysqli_close($conn);
+} else {
+    // if not enough param, kill process
+    die("SOME THING WRONG HEREEEEEEE");
+}
+
+function redirect($url, $username, $token, $error,$expire, $secret_key) {
+    $html = "<html><body><form id='form' action='$url' method='post'>";
+    $html .= "<input type='hidden' name='username' value='$username'>";
+    $html .= "<input type='hidden' name='token' value='$token'>";
+    $html .= "<input type='hidden' name='error' value='$error'>";
+    $html .= "<input type='hidden' name='expire' value='$expire'>";
+    $html .= "<input type='hidden' name='secret_key' value='$secret_key'>";
+
+    $html .= "</form>";
+    $html .= "<script>document.getElementById('form').submit();</script>";
+    $html .= "</body></html>";
+    print($html);
 }
 ?>
