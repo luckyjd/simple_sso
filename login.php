@@ -10,7 +10,7 @@ $expire = 500;
 $token = "";
 
 // Check event regis, enough param or not
-if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_handle']) && isset($_POST['secret_key']) && $_POST['secret_key'] == $secret_key){
+if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['secret_key']) && $_POST['secret_key'] == $secret_key){
         
     //connect to database
     include('connect.php');
@@ -30,8 +30,6 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     if (mysqli_num_rows($result) == 0) {
         $error .= "This user is not exists.";
         mysqli_close($conn);
-        redirect($url, $username, $token, $error, $expire, $secret_key);
-
         // nghiatt
         format_data(0, '', 'Tai khoan khong tont tai');
     }
@@ -48,9 +46,6 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
             $error = "pass";
             //close connection
             mysqli_close($conn);
-            //redirect 
-            redirect($url, $username, $token, $error,$expire, $secret_key);
-
             // nghiatt
             format_data(1, $token, 'Thanh cong ');
         } else {
@@ -64,7 +59,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     } else {
         // uncorrect pass
         $error .= "Not correct password. Try again";
-        redirect($url, $username, $token, $error, $expire,$secret_key);
+        format_data(0, '', 'Sai password');
     }
     // close connection
     mysqli_close($conn);
@@ -74,22 +69,6 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
 } else {
     // if not enough param, kill process
     die("SOME THING WRONG HEREEEEEEE");
-}
-
-function redirect($url, $username, $token, $error,$expire, $secret_key) {
-    /*
-    $html = "<html><body><form id='form' action='$url' method='post'>";
-    $html .= "<input type='hidden' name='username' value='$username'>";
-    $html .= "<input type='hidden' name='token' value='$token'>";
-    $html .= "<input type='hidden' name='error' value='$error'>";
-    $html .= "<input type='hidden' name='expire' value='$expire'>";
-    $html .= "<input type='hidden' name='secret_key' value='$secret_key'>";
-
-    $html .= "</form>";
-    $html .= "<script>document.getElementById('form').submit();</script>";
-    $html .= "</body></html>";
-    print($html);
-    */
 }
 
 function format_data($status, $token, $mess) {
