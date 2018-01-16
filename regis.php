@@ -26,7 +26,8 @@
             echo $error;
         } else {
             // insert into database 
-            $sql = "INSERT INTO user (username, password) VALUES ('{$username}', '{$password}')";
+            $current_time = date('Y-m-d H:i:s');
+            $sql = "INSERT INTO user (username, password, created_date) VALUES ('{$username}', '{$password}', '{$current_time}')";
             // excute query
             if (mysqli_query($conn, $sql)) {
                 $error = 'pass';
