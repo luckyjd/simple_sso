@@ -40,6 +40,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['secr
     if ($password == $row['password']) {
         // correct pass
         $token = bin2hex(openssl_random_pseudo_bytes(64));
+        echo $username;
         $sql_update_token = "UPDATE user SET token='$token' WHERE username='$username'";
         if (mysqli_query($conn, $sql_update_token)) {
             //echo "Record updated successfully";
