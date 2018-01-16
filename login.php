@@ -1,7 +1,6 @@
 <?php
 
-//Khai báo utf-8 để hiển thị được tiếng việt
-header('Content-Type: text/html; charset=UTF-8');
+header("Access-Control-Allow-Origin: *");
 
 // secret key
 $secret_key = "mysecretkey";
