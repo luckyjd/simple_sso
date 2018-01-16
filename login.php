@@ -33,6 +33,8 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
         mysqli_close($conn);
         redirect($url, $username, $token, $error, $expire, $secret_key);
 
+        // nghiatt
+        format_data(0, '', 'Tai khoan khong tont tai');
     }
     // fetch record
     $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
@@ -49,8 +51,14 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
             mysqli_close($conn);
             //redirect 
             redirect($url, $username, $token, $error,$expire, $secret_key);
+
+            // nghiatt
+            format_data(1, $token, 'Thanh cong ');
         } else {
             echo "Error updating record: " . mysqli_error($conn);
+
+            // nghiatt
+            format_data(0, '', 'Co loi xay ra');
         }
         
         
@@ -61,12 +69,16 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     }
     // close connection
     mysqli_close($conn);
+
+    // nghiatt
+    format_data(0, '', 'sai mat khau');
 } else {
     // if not enough param, kill process
     die("SOME THING WRONG HEREEEEEEE");
 }
 
 function redirect($url, $username, $token, $error,$expire, $secret_key) {
+    /*
     $html = "<html><body><form id='form' action='$url' method='post'>";
     $html .= "<input type='hidden' name='username' value='$username'>";
     $html .= "<input type='hidden' name='token' value='$token'>";
@@ -78,5 +90,12 @@ function redirect($url, $username, $token, $error,$expire, $secret_key) {
     $html .= "<script>document.getElementById('form').submit();</script>";
     $html .= "</body></html>";
     print($html);
+    */
+}
+
+function format_data($status, $token, $mess) {
+    $dict = array('status' => $status,  'token' => $token, 'mess' => $mess);
+    echo json_encode($dict);
+    exit();
 }
 ?>
