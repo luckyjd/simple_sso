@@ -1,7 +1,6 @@
 <?php
 
-//Khai báo utf-8 để hiển thị được tiếng việt
-header('Content-Type: text/html; charset=UTF-8');
+header("Access-Control-Allow-Origin: *");
 
 // secret key
 $secret_key = "mysecretkey";
@@ -11,7 +10,7 @@ $expire = 500;
 $token = "";
 
 // Check event regis, enough param or not
-if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_handle']) && isset($_POST['secret_key']) && $_POST['secret_key'] == $secret_key){
+if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['secret_key']) && $_POST['secret_key'] == $secret_key){
         
     //connect to database
     include('connect.php');
@@ -31,8 +30,6 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     if (mysqli_num_rows($result) == 0) {
         $error .= "This user is not exists.";
         mysqli_close($conn);
-        redirect($url, $username, $token, $error, $expire, $secret_key);
-
         // nghiatt
         format_data(0, '', 'Tai khoan khong tont tai', '', '');
     }
@@ -43,15 +40,12 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     if ($password == $row['password']) {
         // correct pass
         $token = bin2hex(openssl_random_pseudo_bytes(64));
-        $sql_update_token = "UPDATE user SET token='$token' WHERE username='$username'";
+        $sql_update_token = "UPDATE user SET token='{$token}' WHERE username='{$username}'";
         if (mysqli_query($conn, $sql_update_token)) {
             //echo "Record updated successfully";
             $error = "pass";
             //close connection
             mysqli_close($conn);
-            //redirect 
-            redirect($url, $username, $token, $error,$expire, $secret_key);
-
             // nghiatt
             format_data(1, $token, 'Thanh cong ', $username, $row['id']);
         } else {
@@ -65,7 +59,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     } else {
         // uncorrect pass
         $error .= "Not correct password. Try again";
-        redirect($url, $username, $token, $error, $expire,$secret_key);
+        format_data(0, '', 'Sai password', '', '');
     }
     // close connection
     mysqli_close($conn);
