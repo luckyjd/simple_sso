@@ -1,5 +1,5 @@
 <?php
 
 header("Access-Control-Allow-Origin: *");
-echo ($_POST['username']);
+echo ($_COOKIE['naru']);
 ?>

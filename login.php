@@ -47,6 +47,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['secr
             //close connection
             mysqli_close($conn);
             // nghiatt
+            setcookie("naru", "sunday", time() + (86400 * 30), "/");
             format_data(1, $token, 'Thanh cong ', $username, $row['id']);
         } else {
             echo "Error updating record: " . mysqli_error($conn);
