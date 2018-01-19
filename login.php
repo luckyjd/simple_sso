@@ -26,7 +26,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     $password = md5($password);
 
     //check username
-    $sql_check_username = "SELECT username, password FROM user WHERE username='$username'";
+    $sql_check_username = "SELECT id, username, password FROM user WHERE username='$username'";
     $result = mysqli_query($conn,$sql_check_username);
     if (mysqli_num_rows($result) == 0) {
         $error .= "This user is not exists.";
@@ -34,7 +34,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
         redirect($url, $username, $token, $error, $expire, $secret_key);
 
         // nghiatt
-        format_data(0, '', 'Tai khoan khong tont tai');
+        format_data(0, '', 'Tai khoan khong tont tai', '', '');
     }
     // fetch record
     $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
@@ -53,12 +53,12 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
             redirect($url, $username, $token, $error,$expire, $secret_key);
 
             // nghiatt
-            format_data(1, $token, 'Thanh cong ');
+            format_data(1, $token, 'Thanh cong ', $username, $row['id']);
         } else {
             echo "Error updating record: " . mysqli_error($conn);
 
             // nghiatt
-            format_data(0, '', 'Co loi xay ra');
+            format_data(0, '', 'Co loi xay ra', '', '');
         }
         
         
@@ -71,7 +71,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['url_
     mysqli_close($conn);
 
     // nghiatt
-    format_data(0, '', 'sai mat khau');
+    format_data(0, '', 'sai mat khau', '', '');
 } else {
     // if not enough param, kill process
     die("SOME THING WRONG HEREEEEEEE");
@@ -93,8 +93,8 @@ function redirect($url, $username, $token, $error,$expire, $secret_key) {
     */
 }
 
-function format_data($status, $token, $mess) {
-    $dict = array('status' => $status,  'token' => $token, 'mess' => $mess);
+function format_data($status, $token, $mess, $username, $id) {
+    $dict = array('status' => $status,  'token' => $token, 'mess' => $mess, 'username' => $username, 'sso_id' => $id);
     echo json_encode($dict);
     exit();
 }

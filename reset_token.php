@@ -33,7 +33,7 @@
 	
 	elseif ($action == RESET_TOKEN_RESET) {
 		$new_token = util::gen_token();
-		$new_date = util::add_minutes(15, new Datetime());
+		$new_date = util::add_minutes(15000, new Datetime());
 		$expire_date = util::convert_date_to_string($new_date);
 		$query = "update user set expire_date = '$expire_date', token='$new_token' where username = '$username'";
 
