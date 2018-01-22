@@ -56,13 +56,13 @@
                   if (this.readyState == 4 && this.status == 200) {
                     var mydata = JSON.parse(this.responseText);
                     if (mydata.status == 1) {
-                        redirectPost("setallcookie.php", mydata);
+                        redirectPost("http://simple.sso.tinhvan.com/setallcookie.php", mydata);
                     } else { 
                         document.getElementById("showerror").innerHTML = mydata.mess;
                     }
                   }
                 };
-                xhttp.open("POST", "login.php", true);
+                xhttp.open("POST", "http://simple.sso.tinhvan.com/login.php", true);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhttp.send(str_send);
               }
