@@ -7,7 +7,7 @@
 ?>
 <html>
    <head>
-  
+   <script language="javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
 </head>
 <body onload="loadComplete()">
         
