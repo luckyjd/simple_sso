@@ -7,6 +7,7 @@
         <script language="javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
     </head>
     <body>
+        <h2>LOG IN SSO</h2>
         <form method="post" action="">
             <table border="0" cellpadding="10" cellspacing="0">
                 <tr>
