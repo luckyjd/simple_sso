@@ -31,7 +31,7 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['secr
         $error .= "This user is not exists.";
         mysqli_close($conn);
         // nghiatt
-        format_data(0, '', 'Tai khoan khong tont tai', '', '');
+        format_data(0, '', 'Tai khoan khong tont tai', '', '', '');
     }
     // fetch record
     $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
@@ -47,49 +47,34 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['secr
             //close connection
             mysqli_close($conn);
             // nghiatt
-            setcookie("naru", "sunday", time() + (86400 * 30), "/");
-            format_data(1, $token, 'Thanh cong ', $username, $row['id']);
+            
+            format_data(1, $token, 'Thanh cong ', $username, $row['id'], $_POST['url_handle']);
         } else {
             echo "Error updating record: " . mysqli_error($conn);
-
+            
             // nghiatt
-            format_data(0, '', 'Co loi xay ra', '', '');
+            format_data(0, '', 'Co loi xay ra', '', '', '');
         }
         
         
     } else {
         // uncorrect pass
         $error .= "Not correct password. Try again";
-        format_data(0, '', 'Sai password', '', '');
+        format_data(0, '', 'Sai password', '', '','');
     }
     // close connection
     mysqli_close($conn);
 
     // nghiatt
-    format_data(0, '', 'sai mat khau', '', '');
+    format_data(0, '', 'sai mat khau', '', '', '');
 } else {
     // if not enough param, kill process
     die("SOME THING WRONG HEREEEEEEE");
 }
 
-function redirect($url, $username, $token, $error,$expire, $secret_key) {
-    /*
-    $html = "<html><body><form id='form' action='$url' method='post'>";
-    $html .= "<input type='hidden' name='username' value='$username'>";
-    $html .= "<input type='hidden' name='token' value='$token'>";
-    $html .= "<input type='hidden' name='error' value='$error'>";
-    $html .= "<input type='hidden' name='expire' value='$expire'>";
-    $html .= "<input type='hidden' name='secret_key' value='$secret_key'>";
 
-    $html .= "</form>";
-    $html .= "<script>document.getElementById('form').submit();</script>";
-    $html .= "</body></html>";
-    print($html);
-    */
-}
-
-function format_data($status, $token, $mess, $username, $id) {
-    $dict = array('status' => $status,  'token' => $token, 'mess' => $mess, 'username' => $username, 'sso_id' => $id);
+function format_data($status, $token, $mess, $username, $id, $url_handle) {
+    $dict = array('status' => $status,  'token' => $token, 'mess' => $mess, 'username' => $username, 'sso_id' => $id, 'url_handle' => $url_handle);
     echo json_encode($dict);
     exit();
 }
