@@ -7,11 +7,7 @@
 ?>
 <html>
    <head>
-   <script>
-   function loadComplete(){
-      window.location= $('#url_handle').val();
-   }
-   </script>
+  
 </head>
 <body onload="loadComplete()">
         
@@ -21,6 +17,10 @@
         <img src="" />
 
     </body>
-    
+    <script>
+   function loadComplete(){
+      window.location= $('#url_handle').val();
+   }
+   </script>
 
 </html>
